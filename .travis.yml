@@ -18,7 +18,7 @@ script:
   - cmake .. -DCMAKE_BUILD_TYPE=Release
   - cmake --build . -- -j2 
   - ctest -j2
-  - ./bin/history_model_benchmark
+  - ./bin/fuzzy_search_benchmark
 
 notifications:
   email: false
