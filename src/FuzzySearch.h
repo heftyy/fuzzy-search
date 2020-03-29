@@ -47,7 +47,7 @@ struct SearchResult
 	PatternMatch m_PatternMatch;
 };
 
-enum class MatchMode
+enum class MatchMode : uint8_t
 {
 	E_STRINGS,
 	E_FILENAMES,

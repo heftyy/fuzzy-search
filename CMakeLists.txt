@@ -16,7 +16,7 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
     set(COMPILE_FLAGS -Wall -Werror -Wno-long-long -pedantic)
 endif()
 
-set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trailing-return-type,-llvm-*,-cppcoreguidelines-pro-bounds-pointer-arithmetic;-warnings-as-errors=*")
+set(CLANG_TIDY_ARGS "clang-tidy;-checks=*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trailing-return-type,-llvm-*,-cppcoreguidelines-pro-bounds-pointer-arithmetic;-warnings-as-errors=*")
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
