@@ -7,10 +7,11 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - gcc-snapshot
+      - g++-8
 
 before_script:
-  - CXX=/usr/bin/gcc-10 CC=/usr/bin/g++-10
+  - export CXX=/usr/bin/g++-8
+  - export CC=/usr/bin/gcc-8
   - mkdir build
   - cd build
 
