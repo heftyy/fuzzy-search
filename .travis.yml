@@ -1,0 +1,24 @@
+dist: bionic
+sudo: false
+language: cpp
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-snapshot
+
+before_script:
+  - CXX=/usr/bin/gcc-10 CC=/usr/bin/g++-10
+  - mkdir build
+  - cd build
+
+script:
+  - cmake .. -DCMAKE_BUILD_TYPE=Release
+  - cmake --build . -- -j2 
+  - ctest -j2
+  - ./bin/history_model_benchmark
+
+notifications:
+  email: false
