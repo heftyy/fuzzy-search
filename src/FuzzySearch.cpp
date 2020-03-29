@@ -1,6 +1,7 @@
 #include "FuzzySearch.h"
 
 #include <numeric>
+#include <cstring>
 
 // #define USE_STD_LOWER
 #if defined(USE_STD_LOWER)
