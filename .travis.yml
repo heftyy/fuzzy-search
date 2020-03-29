@@ -9,13 +9,19 @@ addons:
     packages:
       - g++-8
 
-before_script:
+before_install:
   - export CXX=/usr/bin/g++-8
   - export CC=/usr/bin/gcc-8
-  - mkdir build
-  - cd build
+  - git clone https://github.com/Microsoft/vcpkg.git
+  - cd vcpkg
+  - ./bootstrap-vcpkg.sh
+  - ./vcpkg install catch2
+  - export VCPKG_ROOT=$(pwd)
+  - cd ..
 
 script:
+  - mkdir build
+  - cd build
   - cmake .. -DCMAKE_BUILD_TYPE=Release
   - cmake --build . -- -j2 
   - ctest -j2
