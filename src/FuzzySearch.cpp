@@ -1,10 +1,10 @@
 #include "FuzzySearch.h"
 
-#include <numeric>
 #include <cstring>
+#include <numeric>
 
-// #define USE_STD_LOWER
-#if defined(USE_STD_LOWER)
+// #define FUZZY_SEARCH_USE_STD_LOWER
+#if defined(FUZZY_SEARCH_USE_STD_LOWER)
 #include <cctype>
 #endif
 
@@ -21,13 +21,12 @@ constexpr int leading_letter_penalty = -2;   // penalty applied for every letter
 constexpr int unmatched_letter_penalty = -1; // penalty for every letter that doesn't matter
 
 constexpr int max_leading_letter_penalty = -10;
-constexpr int max_unmatched_characters_from_pattern = 2;
 
 constexpr uint8_t character_to_lower = 0x20U;
 
 constexpr bool IsLower(unsigned char c) noexcept
 {
-#if defined(USE_STD_LOWER)
+#if defined(FUZZY_SEARCH_USE_STD_LOWER)
 	return std::islower(c);
 #else
 	return (c & character_to_lower) != 0;
@@ -36,7 +35,7 @@ constexpr bool IsLower(unsigned char c) noexcept
 
 constexpr bool IsUpper(unsigned char c) noexcept
 {
-#if defined(USE_STD_LOWER)
+#if defined(FUZZY_SEARCH_USE_STD_LOWER)
 	return std::isupper(c);
 #else
 	return (c & character_to_lower) == 0;
@@ -45,7 +44,7 @@ constexpr bool IsUpper(unsigned char c) noexcept
 
 constexpr unsigned int ToLower(unsigned int c) noexcept
 {
-#if defined(USE_STD_LOWER)
+#if defined(FUZZY_SEARCH_USE_STD_LOWER)
 	return std::tolower(c);
 #else
 	return c | character_to_lower;
@@ -75,7 +74,7 @@ inline bool IsSourceFile(std::string_view str)
 			return true;
 		}
 	}
-	else if(str[str.length() - 2] == '.')
+	else if (str[str.length() - 2] == '.')
 	{
 		if (str[str.length() - 1] == 'c')
 		{
@@ -86,7 +85,7 @@ inline bool IsSourceFile(std::string_view str)
 	return false;
 }
 
-template<typename T>
+template <typename T>
 class Span
 {
 public:
@@ -101,7 +100,7 @@ public:
 	[[nodiscard]] const_iterator begin() const { return m_Data; }
 	[[nodiscard]] const_iterator end() const { return m_Data + m_Size; }
 
-	const T& operator[] (size_t index) const { return m_Data[index]; }
+	const T& operator[](size_t index) const { return m_Data[index]; }
 
 	[[nodiscard]] size_t size() const { return m_Size; }
 
@@ -225,7 +224,7 @@ PatternMatch CalculatePatternScore(std::string_view pattern, const Span<PatternM
 	return out_match;
 }
 
-PatternMatch FuzzyMatch(InputPattern& input_pattern, std::string_view str, MatchMode match_mode)
+PatternMatch FuzzyMatch(InputPattern& input_pattern, std::string_view str, SearchConfig config)
 {
 	std::string_view pattern = input_pattern.m_Pattern;
 
@@ -236,6 +235,7 @@ PatternMatch FuzzyMatch(InputPattern& input_pattern, std::string_view str, Match
 	std::vector<int>& match_indexes = input_pattern.m_MatchIndexes;
 
 	int last_path_separator_index = 0;
+	MatchMode match_mode = config.m_MatchMode;
 	if (match_mode == MatchMode::E_SOURCE_FILES || match_mode == MatchMode::E_FILENAMES)
 	{
 		last_path_separator_index = static_cast<int>(str.find_last_of("\\/"));
@@ -294,7 +294,7 @@ PatternMatch FuzzyMatch(InputPattern& input_pattern, std::string_view str, Match
 		{
 			++unmatched_characters_from_pattern;
 			// Allow some unmatched characters (typos etc...)
-			if (unmatched_characters_from_pattern >= max_unmatched_characters_from_pattern)
+			if (unmatched_characters_from_pattern >= config.m_MaxUnmatchedCharactersFromPattern)
 			{
 				return {0};
 			}

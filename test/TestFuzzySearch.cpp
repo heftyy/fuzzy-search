@@ -24,9 +24,13 @@ TEST_CASE("SourceFiles")
 	    "e:/libs/otherlib/main/source/no_extension",
 	};
 
+	SearchConfig config;
+	config.m_MatchMode = MatchMode::E_SOURCE_FILES;
+	config.m_MaxUnmatchedCharactersFromPattern = 2;
+
 	SECTION("search string = bhn")
 	{
-		std::vector<SearchResult> results = Search("bhn", files.begin(), files.end(), &GetStringFunc, MatchMode::E_SOURCE_FILES);
+		std::vector<SearchResult> results = Search("bhn", files.begin(), files.end(), &GetStringFunc, config);
 		REQUIRE("e:/libs/nodehierarchy/main/source/BaseHierarchyNode.cpp" == results[0].m_String);
 		REQUIRE(std::vector({34, 38, 47}) == results[0].m_PatternMatch.m_Matches);
 		REQUIRE("e:/libs/nodehierarchy/main/source/BaseHierarchyNode.h" == results[1].m_String);
@@ -39,7 +43,7 @@ TEST_CASE("SourceFiles")
 
 	SECTION("search string = bhnl")
 	{
-		std::vector<SearchResult> results = Search("bhnl", files.begin(), files.end(), &GetStringFunc, MatchMode::E_SOURCE_FILES);
+		std::vector<SearchResult> results = Search("bhnl", files.begin(), files.end(), &GetStringFunc, config);
 		REQUIRE("e:/libs/nodehierarchy/main/source/BaseHierarchyNodeLoader.cpp" == results[0].m_String);
 		REQUIRE(std::vector({34, 38, 47, 51}) == results[0].m_PatternMatch.m_Matches);
 		REQUIRE("e:/libs/nodehierarchy/main/source/BaseHierarchyNodeLoader.h" == results[1].m_String);
@@ -48,7 +52,7 @@ TEST_CASE("SourceFiles")
 
 	SECTION("search string = hierarchy node base")
 	{
-		std::vector<SearchResult> results = Search("hierarchy node base", files.begin(), files.end(), &GetStringFunc, MatchMode::E_SOURCE_FILES);
+		std::vector<SearchResult> results = Search("hierarchy node base", files.begin(), files.end(), &GetStringFunc, config);
 		REQUIRE("e:/libs/nodehierarchy/main/source/BaseHierarchyNode.cpp" == results[0].m_String);
 		REQUIRE(std::vector({38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 34, 35, 36, 37}) == results[0].m_PatternMatch.m_Matches);
 		REQUIRE("e:/libs/nodehierarchy/main/source/BaseHierarchyNode.h" == results[1].m_String);
@@ -61,7 +65,7 @@ TEST_CASE("SourceFiles")
 
 	SECTION("search string = cmakelists node")
 	{
-		std::vector<SearchResult> results = Search("cmakelists node", files.begin(), files.end(), &GetStringFunc, MatchMode::E_SOURCE_FILES);
+		std::vector<SearchResult> results = Search("cmakelists node", files.begin(), files.end(), &GetStringFunc, config);
 		REQUIRE("e:/libs/nodehierarchy/main/source/CMakeLists.txt" == results[0].m_String);
 		REQUIRE(std::vector({34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 8, 9, 10, 11}) == results[0].m_PatternMatch.m_Matches);
 	}
@@ -83,9 +87,13 @@ TEST_CASE("Filenames")
 	    "e:/libs/otherlib/main/source/no_extension",
 	};
 
+	SearchConfig config;
+	config.m_MatchMode = MatchMode::E_FILENAMES;
+	config.m_MaxUnmatchedCharactersFromPattern = 2;
+
 	SECTION("search string = bhn")
 	{
-		std::vector<SearchResult> results = Search("bhn", files.begin(), files.end(), &GetStringFunc, MatchMode::E_FILENAMES);
+		std::vector<SearchResult> results = Search("bhn", files.begin(), files.end(), &GetStringFunc, config);
 		REQUIRE("e:/libs/nodehierarchy/main/source/BaseHierarchyNode.h" == results[0].m_String);
 		REQUIRE(std::vector({34, 38, 47}) == results[0].m_PatternMatch.m_Matches);
 		REQUIRE("e:/libs/nodehierarchy/main/source/BaseHierarchyNode.cpp" == results[1].m_String);
@@ -98,7 +106,7 @@ TEST_CASE("Filenames")
 
 	SECTION("search string = bhnl")
 	{
-		std::vector<SearchResult> results = Search("node loader", files.begin(), files.end(), &GetStringFunc, MatchMode::E_FILENAMES);
+		std::vector<SearchResult> results = Search("node loader", files.begin(), files.end(), &GetStringFunc, config);
 		REQUIRE("e:/libs/nodehierarchy/main/source/BaseHierarchyNodeLoader.h" == results[0].m_String);
 		REQUIRE(std::vector({47, 48, 49, 50, 51, 52, 53, 54, 55, 56}) == results[0].m_PatternMatch.m_Matches);
 		REQUIRE("e:/libs/nodehierarchy/main/source/BaseHierarchyNodeLoader.cpp" == results[1].m_String);
@@ -107,7 +115,7 @@ TEST_CASE("Filenames")
 
 	SECTION("search string = hierarchy node base")
 	{
-		std::vector<SearchResult> results = Search("hierarchy node base", files.begin(), files.end(), &GetStringFunc, MatchMode::E_FILENAMES);
+		std::vector<SearchResult> results = Search("hierarchy node base", files.begin(), files.end(), &GetStringFunc, config);
 		REQUIRE("e:/libs/nodehierarchy/main/source/BaseHierarchyNode.h" == results[0].m_String);
 		REQUIRE(std::vector({38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 34, 35, 36, 37}) == results[0].m_PatternMatch.m_Matches);
 		REQUIRE("e:/libs/nodehierarchy/main/source/BaseHierarchyNode.cpp" == results[1].m_String);
@@ -120,7 +128,7 @@ TEST_CASE("Filenames")
 
 	SECTION("search string = cmakelists node")
 	{
-		std::vector<SearchResult> results = Search("cmakelists", files.begin(), files.end(), &GetStringFunc, MatchMode::E_SOURCE_FILES);
+		std::vector<SearchResult> results = Search("cmakelists", files.begin(), files.end(), &GetStringFunc, config);
 		REQUIRE("e:/libs/otherlib/main/source/CMakeLists.txt" == results[0].m_String);
 		REQUIRE(std::vector({29, 30, 31, 32, 33, 34, 35, 36, 37, 38}) == results[0].m_PatternMatch.m_Matches);
 		REQUIRE("e:/libs/nodehierarchy/main/source/CMakeLists.txt" == results[1].m_String);
@@ -139,9 +147,13 @@ TEST_CASE("Strings")
 	    "git remote add origin https://github.com/heftyy/fuzzy-search.git",
 	};
 
+	SearchConfig config;
+	config.m_MatchMode = MatchMode::E_STRINGS;
+	config.m_MaxUnmatchedCharactersFromPattern = 2;
+
 	SECTION("search string = git")
 	{
-		std::vector<SearchResult> results = Search("git", files.begin(), files.end(), &GetStringFunc, MatchMode::E_STRINGS);
+		std::vector<SearchResult> results = Search("git", files.begin(), files.end(), &GetStringFunc, config);
 		REQUIRE("git init" == results[0].m_String);
 		REQUIRE(std::vector({0, 1, 2}) == results[0].m_PatternMatch.m_Matches);
 		REQUIRE("git status" == results[1].m_String);
@@ -150,7 +162,7 @@ TEST_CASE("Strings")
 
 	SECTION("search string = add")
 	{
-		std::vector<SearchResult> results = Search("add", files.begin(), files.end(), &GetStringFunc, MatchMode::E_STRINGS);
+		std::vector<SearchResult> results = Search("add", files.begin(), files.end(), &GetStringFunc, config);
 		REQUIRE("git add my_new_file.txt" == results[0].m_String);
 		REQUIRE(std::vector({4, 5, 6}) == results[0].m_PatternMatch.m_Matches);
 		REQUIRE("git commit -m \"Add three files\"" == results[1].m_String);
@@ -161,7 +173,7 @@ TEST_CASE("Strings")
 
 	SECTION("search string = reset")
 	{
-		std::vector<SearchResult> results = Search("reset", files.begin(), files.end(), &GetStringFunc, MatchMode::E_STRINGS);
+		std::vector<SearchResult> results = Search("reset", files.begin(), files.end(), &GetStringFunc, config);
 		REQUIRE("git reset --soft HEAD^" == results[0].m_String);
 		REQUIRE(std::vector({4, 5, 6, 7, 8}) == results[0].m_PatternMatch.m_Matches);
 	}

@@ -92,15 +92,13 @@ TEST_CASE("Fuzzy search benchmark")
 	std::vector<std::string> split_by_space_long = {"qt", "base", "view", "list"};
 	std::vector<std::string> split_by_space_short = {"TABLE"};
 
-	BENCHMARK("FuzzyLongPattern")
-	{
-		return FuzzySearch::Search("qt base view list", files.begin(), files.end(), &GetStringFunc, FuzzySearch::MatchMode::E_SOURCE_FILES);
-	};
+	FuzzySearch::SearchConfig config;
+	config.m_MatchMode = FuzzySearch::MatchMode::E_SOURCE_FILES;
+	config.m_MaxUnmatchedCharactersFromPattern = 2;
 
-	BENCHMARK("FuzzyShortPattern")
-	{
-		return FuzzySearch::Search("TABLE", files.begin(), files.end(), &GetStringFunc, FuzzySearch::MatchMode::E_SOURCE_FILES);
-	};
+	BENCHMARK("FuzzyLongPattern") { return FuzzySearch::Search("qt base view list", files.begin(), files.end(), &GetStringFunc, config); };
+
+	BENCHMARK("FuzzyShortPattern") { return FuzzySearch::Search("TABLE", files.begin(), files.end(), &GetStringFunc, config); };
 
 	BENCHMARK("BoyerMooreLongPattern") { return BoyerMoore(split_by_space_long, files); };
 
