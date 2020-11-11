@@ -14,7 +14,7 @@ namespace FuzzySearch
 constexpr int start_score = 5;               // every match starts out with this
 constexpr int sequential_bonus = 20;         // bonus for adjacent matches
 constexpr int separator_bonus = 20;          // bonus if match occurs after a separator
-constexpr int camel_bonus = 25;              // bonus if match is uppercase and prev is lower
+constexpr int camel_bonus = 30;              // bonus if match is uppercase and prev is lower
 constexpr int first_letter_bonus = 25;       // bonus if the first letter is matched
 constexpr int filename_bonus = 15;           // bonus if the match is in the filename instead of the path
 constexpr int leading_letter_penalty = -2;   // penalty applied for every letter in str before the first match
@@ -121,19 +121,20 @@ int CalculateSequentialMatchScore(std::string_view str, int filename_start_index
 	for (const int curr_index : matches)
 	{
 		// Check for bonuses based on neighbor character value
-		if (curr_index > 0 && (match_mode == MatchMode::E_FILENAMES || match_mode == MatchMode::E_SOURCE_FILES))
+		if (match_mode == MatchMode::E_FILENAMES || match_mode == MatchMode::E_SOURCE_FILES)
 		{
-			const char neighbor = str[curr_index - 1];
-			const char curr = str[curr_index];
+			int prev_index = curr_index - 1;
+			bool is_prev_slash = prev_index < 0 || str[prev_index] == '\\' || str[prev_index] == '/';
+			bool is_prev_separator = is_prev_slash || str[prev_index] == '_' || str[prev_index] == ' ';
+			bool is_prev_lower = is_prev_separator || IsLower(str[prev_index]);
 
 			// Camel case
-			if ((IsLower(neighbor) || neighbor == '\\' || neighbor == '/') && IsUpper(curr))
+			if (is_prev_lower && IsUpper(str[curr_index]))
 			{
 				out_score += camel_bonus;
 			}
-
 			// Separator
-			if (neighbor == '_' || neighbor == ' ' || neighbor == '\\' || neighbor == '/')
+			else if (is_prev_separator)
 			{
 				out_score += separator_bonus;
 			}
