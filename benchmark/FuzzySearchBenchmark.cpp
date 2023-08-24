@@ -3,7 +3,7 @@
 #include <regex>
 
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
-#include <catch2/catch.hpp>
+#include <catch.hpp>
 
 #include <Files.h>
 #include <FuzzySearch.h>
