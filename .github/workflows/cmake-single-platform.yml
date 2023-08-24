@@ -24,11 +24,11 @@ jobs:
 
     - name: Setup vcpkg
       run: |
-        git clone https://github.com/Microsoft/vcpkg.git \
-        cd vcpkg \
-        ./bootstrap-vcpkg.sh \
-        ./vcpkg install catch2 \
-        export VCPKG_ROOT=$(pwd) \
+        git clone https://github.com/Microsoft/vcpkg.git
+        cd vcpkg
+        ./bootstrap-vcpkg.sh
+        ./vcpkg install catch2
+        export VCPKG_ROOT=$(pwd)
         cd ..
 
     - name: Configure CMake
