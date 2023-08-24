@@ -76,9 +76,9 @@ std::vector<std::string> BoyerMoore(const std::vector<std::string>& split_by_spa
 	return results;
 }
 
-std::string_view GetStringFunc(std::string_view string)
+const char* GetStringFunc(const std::string& string)
 {
-	return string;
+	return string.c_str();
 }
 
 TEST_CASE("Fuzzy search benchmark")
@@ -96,9 +96,9 @@ TEST_CASE("Fuzzy search benchmark")
 	config.m_MatchMode = FuzzySearch::MatchMode::E_SOURCE_FILES;
 	config.m_MaxUnmatchedCharactersFromPattern = 2;
 
-	BENCHMARK("FuzzyLongPattern") { return FuzzySearch::Search("qt base view list", files.begin(), files.end(), &GetStringFunc, config); };
+	BENCHMARK("FuzzyLongPattern") { return FuzzySearch::Search<const char*>("qt base view list", files.begin(), files.end(), &GetStringFunc, config); };
 
-	BENCHMARK("FuzzyShortPattern") { return FuzzySearch::Search("TABLE", files.begin(), files.end(), &GetStringFunc, config); };
+	BENCHMARK("FuzzyShortPattern") { return FuzzySearch::Search<const char*>("TABLE", files.begin(), files.end(), &GetStringFunc, config); };
 
 	BENCHMARK("BoyerMooreLongPattern") { return BoyerMoore(split_by_space_long, files); };
 
